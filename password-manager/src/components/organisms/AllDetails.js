@@ -18,27 +18,28 @@ const FieldName = styled.span`
 `
 
 const AllDetails = props => {
-    console.log("props", props);
     return(
-        <Container>
-            <h2>{props.site}</h2>
-            <NormalLine>
-                <FieldName>username</FieldName>
-                <span>{props.username}</span>
-            </NormalLine>
-            <NormalLine>
-                <FieldName>password</FieldName>
-                <span type="password">{props.password}</span>
-            </NormalLine>
-            <NormalLine>
-                <FieldName>last modified</FieldName>
-                <span>{props.lastModified}</span>
-            </NormalLine>
-            <NormalLine>
-                <FieldName>created</FieldName>
-                <span>{props.created}</span>
-            </NormalLine>
-        </Container>
+        props.site ?
+            <Container>
+                <h2>{props.site}</h2>
+                <NormalLine>
+                    <FieldName>username</FieldName>
+                    <span>{props.username}</span>
+                </NormalLine>
+                <NormalLine>
+                    <FieldName>password</FieldName>
+                    <span type="password">{props.password}</span>
+                </NormalLine>
+                <NormalLine>
+                    <FieldName>last modified</FieldName>
+                    <span>{props.lastModified}</span>
+                </NormalLine>
+                <NormalLine>
+                    <FieldName>created</FieldName>
+                    <span>{props.created}</span>
+                </NormalLine>
+            </Container>:
+            <div></div>
     );
 };
 

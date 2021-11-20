@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import AccountItem from '../molecules/AccountItem';
+import AddAccount from '../molecules/AddAccount';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
     display: flex;
@@ -17,7 +19,6 @@ const accounts = [
     {id: "3", site: "UTEC", username: "joe08", password: "aeaaaaa", strength: "secure", lastModified: "tomorrow", created: "tomorrow"}
 ]
 
-
 const AccountList = props => {
     return(
         <Container>
@@ -26,8 +27,14 @@ const AccountList = props => {
                                                     password={account.password} strength={account.strength} 
                                                     lastModified={account.lastModified} created={account.created} 
                                                     accountSelector={props.accountSelector}/>)}
+            <AddAccount addAccount={() => { props.hideAccountDetails(); props.showAccountCreation(); }}/>
         </Container>
     );
+};
+
+AccountList.propTypes = {
+    hideAccountDetails: PropTypes.func,
+    showAccountCreation: PropTypes.func
 };
 
 export default AccountList;

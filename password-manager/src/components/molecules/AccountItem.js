@@ -5,28 +5,10 @@ import AbacusIcon from '../atoms/AbacusIcon';
 import Details from './Details'
 import ScienceIcon from "../atoms/ScienceIcon";
 import DNAIcon from "../atoms/DNAIcon";
+import ItemContainer from '../atoms/ItemContainer';
+import IconContainer from '../atoms/IconContainer';
 
-const Container = styled.div`
-    height: 126px;
-    width: 380px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    background-color: white;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    box-shadow: -1px 2px 25px 3px rgba(0, 0, 0, 0.11);
-`;
-
-const IconContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: ${props => props.backgroundColor};
-    padding: 12px;
-    margin: 30px;
-`;
+const Container = ItemContainer;
 
 const AccountItem = (props) => {
     let Icon, color;
