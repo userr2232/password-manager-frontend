@@ -14,11 +14,11 @@ const AccountItem = (props) => {
     let Icon, color;
     switch(props.site) {
         case "Facebook":
-            color = "#ffbc00";
+            color = "#ffffff";
             Icon = <AbacusIcon size={36}/>;
             break;
         case "Gmail":
-            color = "rgb(40, 50, 50)";
+            color = "#ffffff";
             Icon = <ScienceIcon size={36}/>;
             break;
         case "UTEC":
