@@ -15,14 +15,13 @@ const Container = styled.div`
 `;
 
 function makeid(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`-=[];';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
- charactersLength));
-   }
-   return result;
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`-=[];';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
 
 const AccountCreation = (props) => {
@@ -55,14 +54,18 @@ const AccountCreation = (props) => {
                 <Box p={8} width={"100%"} borderWidth={1} borderRadius={8} boxShadow={"lg"}>
                     <Box>
                         <form onSubmit={handleSubmit(async data => { handleAccountAddition(data); reset(initialValues); })}>
-                            <Box>
-                                <FormControl p={2} isRequired>
-                                    <FormLabel display={'flex'} as={'legend'} alignItems={'center'}>
-                                        Username
-                                    </FormLabel>
-                                    <Input name={'username'} placeholder={'Username'}/>
-                                </FormControl>
-                            </Box>
+                            <FormControl p={2} isRequired>
+                                <FormLabel display={'flex'} as={'legend'} alginItems={'center'}>
+                                    Site
+                                </FormLabel>
+                                <Input name={'site'} placeholder={'site'}/>
+                            </FormControl>
+                            <FormControl p={2} isRequired>
+                                <FormLabel display={'flex'} as={'legend'} alignItems={'center'}>
+                                    Username
+                                </FormLabel>
+                                <Input name={'username'} placeholder={'Username'}/>
+                            </FormControl>
                             <FormControl isRequired>
                                 <FormLabel display={'flex'} as={'legend'} alignItems={'center'}>
                                     Password
