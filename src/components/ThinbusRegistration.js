@@ -8,6 +8,8 @@ import {
     Text
 } from '@chakra-ui/react';
 import { useForm, useFormState, useFieldArray, Controller } from "react-hook-form";
+import axios from 'axios';
+import { apiUrl } from '../config'
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,13 +26,8 @@ const rfc5054 = {
     k_base16: "5b9e8ef059c6b32ea59fc1d322d37f04aa30bae5aa9003b8321e21ddb04e300"
 }
 
-const createVerifier = () => {
-    const form = document.getElementById('registration-form').value;
-    const username = document.getElementById('username').value;
-    console.log("username", username);
-
-    const password = document.getElementById('verifier').value;
-    console.log("password", password);
+const createVerifier = (data) => {
+    const {username, password} = data;
 
     const SRP6JavascriptClientSessionSHA256 = require('thinbus-srp/client.js')(rfc5054.N_base10, rfc5054.g_base10, rfc5054.k_base16);
     
@@ -43,11 +40,12 @@ const createVerifier = () => {
     const verifier = srpClient.generateVerifier(salt, username, password);
     console.log("verifier:", verifier);
 
-    document.getElementById('verifier').value = verifier;
-    document.getElementById('salt').value = salt;
+    return {username, salt, verifier};
 };
 
 const ThinbusRegistration = () => {
+    let salt = "";
+
     const { control, register, handleSubmit, reset, trigger, setError } = useForm({
         defaultValues: {username: '', password: ''},
         shouldUseNativeValidation: true
@@ -58,7 +56,17 @@ const ThinbusRegistration = () => {
       });
 
     const onSubmit = async data => {
-        await (async () => {})();
+        await axios({
+            method: 'post',
+            url: apiUrl + '/registration',
+            data: createVerifier(data),
+            config: {
+                crossOrigin: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }
+        });
     }
 
     useEffect(() => {
@@ -102,12 +110,6 @@ const ThinbusRegistration = () => {
                 </Box>
             </Box>
         </Flex>
-        {/* <form action="/save" method="post" id="registration-form">
-            username <input type="text" name="username" id="username"></input><br/>
-            password <input type="text" name="verifier" id="verifier"></input><br/>
-            salt <input type="text" name="salt" id="salt"></input>
-            <button type="button" onClick={createVerifier}>Register</button>
-        </form> */}
     </Wrapper>
     );
 }
