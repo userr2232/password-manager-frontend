@@ -3,11 +3,9 @@ import ReactDOM from 'react-dom'
 import styled from 'styled-components';
 import {
     Flex, Box, Heading, FormControl, FormLabel,
-    Input, Button, List, ListItem, ListIcon, useColorMode,
-    Alert, AlertIcon, AlertTitle, AlertDescription,
-    Text
+    Input, Button
 } from '@chakra-ui/react';
-import { useForm, useFormState, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
 import axios from 'axios';
 import { apiUrl } from '../config'
 
@@ -44,9 +42,7 @@ const createVerifier = (data) => {
 };
 
 const ThinbusRegistration = () => {
-    let salt = "";
-
-    const { control, register, handleSubmit, reset, trigger, setError } = useForm({
+    const { control, register, handleSubmit, reset } = useForm({
         defaultValues: {username: '', password: ''},
         shouldUseNativeValidation: true
     });
