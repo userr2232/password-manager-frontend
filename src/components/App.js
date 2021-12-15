@@ -5,6 +5,7 @@ import AllDetails from './organisms/AllDetails';
 import AccountCreation from './organisms/AccountCreation';
 import { ChakraProvider } from '@chakra-ui/provider';
 import ThinbusRegistration from './ThinbusRegistration';
+import ThinbusLogin from './ThinbusLogin';
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +43,7 @@ const App = () => {
 
   return (
     <ChakraProvider>
-      {/* <Wrapper>
+      <Wrapper>
         <InnerWrapper>
           <h1>Bienvenido</h1>
           <h3 style={{margin: "40px auto"}}>Tus Cuentas</h3>
@@ -52,8 +53,8 @@ const App = () => {
                     strength={strength} lastModified={lastModified} 
                     created={created}/> : <></>}
         {showAccountCreation ? <AccountCreation/> : <></>}
-      </Wrapper> */}
-      <ThinbusRegistration/>
+      </Wrapper>
+      {/* <ThinbusLogin/> */}
     </ChakraProvider>
   );
 }
