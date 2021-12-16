@@ -43,26 +43,26 @@ const authenticate = async data => {
 
     srpClient.step1(username, password);
     const credentials = srpClient.step2(salt, B);
-    console.log("credentials", credentials)
+    // console.log("credentials", credentials)
     credentials['username'] = username;
 
     const sessionKey = srpClient.getSessionKey();
-    console.log("sessionKey", sessionKey);
+    console.log("SHARED KEY:", sessionKey);
+    console.log("credentials:", credentials);
+    const loginRes = await axios({
 
-    // const loginRes = await axios({
+        method: 'post',
+        url: apiUrl + '/login/authenticate',
+        data: credentials,
+        config: {
+            crossOrigin: true,
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+    });
 
-    //     method: 'post',
-    //     url: apiUrl + '/login/authenticate',
-    //     data: credentials,
-    //     config: {
-    //         crossOrigin: true,
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         }
-    //     }
-    // });
-
-    // console.log("loginRes", loginRes);
+    console.log("loginRes", loginRes);
 }
 
 const ThinbusLogin = () => {

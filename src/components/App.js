@@ -43,7 +43,7 @@ const App = () => {
 
   return (
     <ChakraProvider>
-      <Wrapper>
+      {/* <Wrapper>
         <InnerWrapper>
           <h1>Bienvenido</h1>
           <h3 style={{margin: "40px auto"}}>Tus Cuentas</h3>
@@ -53,8 +53,8 @@ const App = () => {
                     strength={strength} lastModified={lastModified} 
                     created={created}/> : <></>}
         {showAccountCreation ? <AccountCreation/> : <></>}
-      </Wrapper>
-      {/* <ThinbusLogin/> */}
+      </Wrapper> */}
+      <ThinbusLogin/>
     </ChakraProvider>
   );
 }
