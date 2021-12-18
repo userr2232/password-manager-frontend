@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { random_str } from '../../utils';
 
 import {
     Flex, Box, Heading, FormControl, FormLabel,
@@ -14,22 +15,12 @@ const Container = styled.div`
     flex-direction: column;
 `;
 
-function makeid(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`-=[];';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
 const AccountCreation = (props) => {
     const [submitted, setSubmitted] = useState(false);
     const [securePassword, setSecurePassword] = useState("");
 
     const generatePassword = () => {
-        setSecurePassword(makeid(20));
+        setSecurePassword(random_str(20));
     };    
 
     const initialValues = {

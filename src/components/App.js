@@ -54,7 +54,7 @@ const App = () => {
                     created={created}/> : <></>}
         {showAccountCreation ? <AccountCreation/> : <></>}
       </Wrapper> */}
-      <ThinbusLogin/>
+      <ThinbusRegistration/>
     </ChakraProvider>
   );
 }

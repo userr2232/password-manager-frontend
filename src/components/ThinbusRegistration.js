@@ -7,6 +7,8 @@ import {
 import { useForm, useFormState } from "react-hook-form";
 import axios from 'axios';
 import { apiUrl } from '../config'
+import { random_str } from '../utils';
+import aes from 'crypto-js/aes';
 
 const Wrapper = styled.div`
   display: flex;
@@ -37,7 +39,15 @@ const createVerifier = (data) => {
     const verifier = srpClient.generateVerifier(salt, username, password);
     console.log("verifier:", verifier);
 
-    return {username, salt, verifier};
+    const secret_key = random_str(50);
+    console.log("secret_key", secret_key)
+
+    const encrypted_secret = aes.encrypt(secret_key, password).toString();
+    console.log("encrypted_secret", encrypted_secret)
+
+    console.log("the encrypted secret was encrypted with the password", password)
+
+    return {username, salt, verifier, encrypted_secret};
 };
 
 const ThinbusRegistration = () => {
@@ -62,6 +72,7 @@ const ThinbusRegistration = () => {
                 }
             }
         });
+
     }
 
     useEffect(() => {
