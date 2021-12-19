@@ -10,14 +10,14 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         async function validateToken() {
             const jwt = localStorage.getItem("jwt")
-
+            console.log(jwt)
             const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwt
                 }
             })
-
+            console.log(response)
             if (response.status !== 200) {
                 setUser(false)
                 setLoadingInitial(false)
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{user}} >
+        <AuthContext.Provider value={{ u: [user, setUser]}} >
             {!loadingInitial && children}
         </AuthContext.Provider>
     )

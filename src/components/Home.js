@@ -7,6 +7,10 @@ import { apiUrl } from '../config';
 import axios from 'axios';
 import { PasswordContext } from '../contexts/password';
 import aes from 'crypto-js/aes';
+import { Button } from '@chakra-ui/button';
+import { Flex, Heading } from '@chakra-ui/layout';
+import { useAuth } from '../auth/UseAuth';
+import { useNavigate } from 'react-router';
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,6 +37,16 @@ const Home = () => {
   const [accounts, setAccounts] = useState([]);
 
   const {context_password} = useContext(PasswordContext);
+
+  let { u } = useAuth()
+  const navigate = useNavigate()
+  const [_, setUser] = u
+  
+  const handleClick = () => {
+    localStorage.removeItem("jwt")
+    setUser(false)
+    navigate('/login', { replace: true })
+  }
 
   useEffect(() => {
     async function init() {
@@ -80,18 +94,22 @@ const Home = () => {
     }
 
     return (
-    <Wrapper>
-        <InnerWrapper>
-          <h1>Bienvenido</h1>
-          <h3 style={{margin: "40px auto"}}>Tus Cuentas</h3>
-          <AccountList accounts={accounts} accountSelector={accountSelector} hideAccountDetails={() => setShowDetails(false)} showAccountCreation={() => setShowAccountCreation(true)}/>
-        </InnerWrapper>
-        {showDetails ? <AllDetails site={site} username={username} password={password} 
-                    strength={strength} lastModified={lastModified} 
-                    created={created}/> : <></>}
-        {showAccountCreation ? <AccountCreation addToListAndCreate={addToListAndCreate}/> : <></>}
-    
-    </Wrapper>)
+      <>
+      <Flex direction={'row-reverse'} paddingTop={'2em'} paddingRight={'2em'}>
+        <Button onClick={handleClick}>Cerrar sesión</Button>
+      </Flex>
+        <Wrapper>
+          <InnerWrapper>
+            <Heading>Bienvenido</Heading>
+            <h3 style={{margin: "40px auto"}}>Tus Cuentas</h3>
+            <AccountList accounts={accounts} accountSelector={accountSelector} hideAccountDetails={() => setShowDetails(false)} showAccountCreation={() => setShowAccountCreation(true)}/>
+          </InnerWrapper>
+          {showDetails ? <AllDetails site={site} username={username} password={password} 
+                      strength={strength} lastModified={lastModified} 
+                      created={created}/> : <></>}
+          {showAccountCreation ? <AccountCreation addToListAndCreate={addToListAndCreate}/> : <></>}
+      </Wrapper>
+    </>)
 }
 
 export default Home;
