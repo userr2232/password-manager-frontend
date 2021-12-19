@@ -19,9 +19,10 @@ export const AuthProvider = ({ children }) => {
             })
 
             if (response.status !== 200) {
-                setUser(null)
+                setUser(false)
                 setLoadingInitial(false)
             } else {
+                console.log("TOKEN VALIDO")
                 setUser(true)
                 setLoadingInitial(false)
             }

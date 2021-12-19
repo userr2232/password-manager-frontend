@@ -49,20 +49,28 @@ const authenticate = async data => {
     const sessionKey = srpClient.getSessionKey();
     console.log("SHARED KEY:", sessionKey);
     console.log("credentials:", credentials);
-    const loginRes = await axios({
 
-        method: 'post',
-        url: apiUrl + '/login/authenticate',
-        data: credentials,
-        config: {
-            crossOrigin: true,
-            headers: {
-                'Content-Type': 'application/json',
+    try {
+        const loginRes = await axios({
+
+            method: 'post',
+            url: apiUrl + '/login/authenticate',
+            data: credentials,
+            config: {
+                crossOrigin: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             }
+        });    
+        if (loginRes.status === 201) {
+            const jwt = loginRes.data["access_token"]
+            localStorage.setItem("jwt", jwt)
         }
-    });
-
-    console.log("loginRes", loginRes);
+    } catch (error) {
+        console.log("error ", error)
+    }
+    
 }
 
 const ThinbusLogin = () => {
