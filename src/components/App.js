@@ -8,7 +8,6 @@ import Home from './Home';
 const AuthenticatedRoute = ({ children }) => {
   let { user } = useAuth()
   let location = useLocation()
-
   if(!user) {
     return <Navigate to="/login" state={{ from: location }} />
   }

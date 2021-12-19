@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import AccountItem from '../molecules/AccountItem';
 import AddAccount from '../molecules/AddAccount';
 import PropTypes from 'prop-types';
+import { apiUrl } from '../../config';
 
 const Container = styled.div`
     display: flex;
@@ -14,20 +15,41 @@ const Container = styled.div`
 // const passwords = ["asdasd", "asdasdasd", "dsfsdfgsfgd"]
 
 const accounts = [
-    {id: "1", site: "Facebook", username: "bdiaz22", password: "sdfsdfsd", strength: "low", lastModified: "today", created: "today"},
-    {id: "2", site: "Gmail", username: "bdiaz23", password: "sdfsdfs", strength: "medium", lastModified: "yesterday", created: "yesterday"},
-    {id: "3", site: "UTEC", username: "joe08", password: "aeaaaaa", strength: "secure", lastModified: "tomorrow", created: "tomorrow"}
+    { id: "1", site: "Facebook", username: "bdiaz22", password: "sdfsdfsd", strength: "low", lastModified: "today", created: "today" },
+    { id: "2", site: "Gmail", username: "bdiaz23", password: "sdfsdfs", strength: "medium", lastModified: "yesterday", created: "yesterday" },
+    { id: "3", site: "UTEC", username: "joe08", password: "aeaaaaa", strength: "secure", lastModified: "tomorrow", created: "tomorrow" }
 ]
 
 const AccountList = props => {
-    return(
+
+    useEffect(() => {
+        async function init() {
+            const jwt = localStorage.getItem('jwt')
+            const response = await fetch(apiUrl + '/passwords', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwt
+                }
+            })
+            
+            if (response.ok) {
+                const data = await response.json()
+                console.log(data)
+            } else {
+                console.log("error")
+            }
+        }
+        init()
+    }, [])
+
+    return (
         <Container>
-            {accounts.map(account => <AccountItem key={account.id} 
-                                                    site={account.site} username={account.username} 
-                                                    password={account.password} strength={account.strength} 
-                                                    lastModified={account.lastModified} created={account.created} 
-                                                    accountSelector={props.accountSelector}/>)}
-            <AddAccount addAccount={() => { props.hideAccountDetails(); props.showAccountCreation(); }}/>
+            {accounts.map(account => <AccountItem key={account.id}
+                site={account.site} username={account.username}
+                password={account.password} strength={account.strength}
+                lastModified={account.lastModified} created={account.created}
+                accountSelector={props.accountSelector} />)}
+            <AddAccount addAccount={() => { props.hideAccountDetails(); props.showAccountCreation(); }} />
         </Container>
     );
 };
