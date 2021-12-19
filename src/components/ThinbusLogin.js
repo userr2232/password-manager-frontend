@@ -7,6 +7,8 @@ import {
 import { useForm, useFormState } from 'react-hook-form';
 import axios from 'axios';
 import { apiUrl } from '../config';
+import { useAuth } from '../auth/UseAuth';
+import { useNavigate } from 'react-router';
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,7 +25,7 @@ const rfc5054 = {
     k_base16: "5b9e8ef059c6b32ea59fc1d322d37f04aa30bae5aa9003b8321e21ddb04e300"
 };
 
-const authenticate = async data => {
+const authenticate = async (data, setUser) => {
     const { username, password } = data;
 
     const challengeRes = await axios({
@@ -66,6 +68,7 @@ const authenticate = async data => {
         if (loginRes.status === 201) {
             const jwt = loginRes.data["access_token"]
             localStorage.setItem("jwt", jwt)
+            setUser(true)
         }
     } catch (error) {
         console.log("error ", error)
@@ -74,6 +77,9 @@ const authenticate = async data => {
 }
 
 const ThinbusLogin = () => {
+    const { u } = useAuth()
+    const navigate = useNavigate()
+    const [user, setUser] = u
     const { control, register, handleSubmit, reset } = useForm({
         defaultValues: {username: '', password: ''},
         shouldUseNativeValidation: true
@@ -84,7 +90,13 @@ const ThinbusLogin = () => {
       });
 
     const onSubmit = async data => {
-        authenticate(data);
+        authenticate(data, setUser).then( _ => {
+            console.log(user)
+            if (user) {
+                
+                navigate('/', { replace: true })
+            }
+        });
     }
 
     useEffect(() => {

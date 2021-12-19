@@ -6,8 +6,9 @@ import { AuthProvider, useAuth } from '../auth/UseAuth';
 import Home from './Home';
 
 const AuthenticatedRoute = ({ children }) => {
-  let { user } = useAuth()
+  let { u } = useAuth()
   let location = useLocation()
+  const [user, _] = u
   if(!user) {
     return <Navigate to="/login" state={{ from: location }} />
   }

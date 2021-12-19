@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import AccountList from './organisms/AccountList'
 import AccountCreation from './organisms/AccountCreation'
 import AllDetails from './organisms/AllDetails'
+import { Button } from '@chakra-ui/button';
+import { Flex, Heading } from '@chakra-ui/layout';
+import { useAuth } from '../auth/UseAuth';
+import { useNavigate } from 'react-router';
 
 const Wrapper = styled.div`
 display: flex;
@@ -26,7 +30,16 @@ const Home = () => {
     const [created, setCreated] = useState(null);
     const [showDetails, setShowDetails] = useState(false);
     const [showAccountCreation, setShowAccountCreation] = useState(false);
-  
+    let { u } = useAuth()
+    const navigate = useNavigate()
+    const [_, setUser] = u
+    
+    const handleClick = () => {
+      localStorage.removeItem("jwt")
+      setUser(false)
+      navigate('/login', { replace: true })
+    }
+
     const accountSelector = details => {
       setShowAccountCreation(false);
       setSite(details.site);
@@ -38,9 +51,14 @@ const Home = () => {
       setShowDetails(true);
     }
 
-    return <Wrapper>
+    return (
+    <>
+      <Flex direction={'row-reverse'} paddingTop={'2em'} paddingRight={'2em'}>
+        <Button onClick={handleClick}>Cerrar sesión</Button>
+      </Flex>
+      <Wrapper>
         <InnerWrapper>
-          <h1>Bienvenido</h1>
+          <Heading>Bienvenido</Heading>
           <h3 style={{margin: "40px auto"}}>Tus Cuentas</h3>
           <AccountList accountSelector={accountSelector} hideAccountDetails={() => setShowDetails(false)} showAccountCreation={() => setShowAccountCreation(true)}/>
         </InnerWrapper>
@@ -49,6 +67,8 @@ const Home = () => {
                     created={created}/> : <></>}
         {showAccountCreation ? <AccountCreation/> : <></>}
       </Wrapper>
+    </>
+    )
 }
 
 export default Home;
