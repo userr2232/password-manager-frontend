@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { ChakraProvider } from '@chakra-ui/provider';
 import ThinbusRegistration from './ThinbusRegistration';
 import ThinbusLogin from './ThinbusLogin';
 import { Route, Navigate, Routes, useLocation, BrowserRouter } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../auth/UseAuth';
 import Home from './Home';
+import { PasswordContext } from '../contexts/password';
 
 const AuthenticatedRoute = ({ children }) => {
   let { user } = useAuth()
@@ -16,26 +18,34 @@ const AuthenticatedRoute = ({ children }) => {
 }
 
 const App = () => {
+  const [password, setPassword] = useState("");
+
+  const updatePassword = (new_password) => {
+    setPassword(new_password);
+  }
+
   return (
-    <BrowserRouter>
-      <ChakraProvider>
-        <AuthProvider>
-          <Routes>
-            <Route path="/login" element={
-              <ThinbusLogin/>
-            }/>
-            <Route path="/register" element={
-              <ThinbusRegistration />
-            }/>
-            <Route path="/" element={
-              <AuthenticatedRoute>
-                <Home />
-              </AuthenticatedRoute>
-            }/>
-          </Routes>
-        </AuthProvider>
-      </ChakraProvider>
-    </BrowserRouter>
+    <PasswordContext.Provider value={{password, updatePassword}}>
+      <BrowserRouter>
+        <ChakraProvider>
+          <AuthProvider>
+            <Routes>
+              <Route path="/login" element={
+                <ThinbusLogin />
+              }/>
+              <Route path="/register" element={
+                <ThinbusRegistration />
+              }/>
+              <Route path="/" element={
+                <AuthenticatedRoute>
+                  <Home />
+                </AuthenticatedRoute>
+              }/>
+            </Routes>
+          </AuthProvider>
+        </ChakraProvider>
+      </BrowserRouter>
+    </PasswordContext.Provider>
   );
 }
 

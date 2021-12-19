@@ -6,8 +6,8 @@ const AddIcon = props => {
     const { size } = props;
     return (
         <Icon size={size}>
-            <path d="M12 5V19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M5 12H19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 5V19" stroke="black" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round"/>
+            <path d="M5 12H19" stroke="black" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round"/>
         </Icon>
     );
 }

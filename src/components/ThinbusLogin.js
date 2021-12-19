@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
     Flex, Box, Heading, FormControl, FormLabel,
-    Input, Button
+    Input, Button, propNames
 } from '@chakra-ui/react';
 import { useForm, useFormState } from 'react-hook-form';
 import axios from 'axios';
 import { apiUrl } from '../config';
+import { PasswordContext } from '../contexts/password';
 
 const Wrapper = styled.div`
   display: flex;
@@ -99,36 +100,39 @@ const ThinbusLogin = () => {
     }, [isSubmitting]);
 
     return (
-    <Wrapper>
-        <Flex width="100%" justifyContent="center">
-            <Box p={2} width={"30%"}>
-                <Box textAlign="center">
-                    <Heading as={'h3'} size={'lg'}>Login</Heading>
-                </Box>
-                <Box p={8} width={"100%"} borderWidth={1} borderRadius={8} boxShadow={"lg"}>
-                    <Box>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <FormControl p={2} isRequired>
-                                <FormLabel display={'flex'} as={'legend'} alignItems={'center'}>
-                                    Username
-                                </FormLabel>
-                                <Input {...register("username", {required: true})} name={'username'} placeholder={'Username'}/>
-                            </FormControl>
-                            <FormControl p={2} isRequired>
-                                <FormLabel display={'flex'} as={'legend'} alignItems={'center'}>
-                                    Password
-                                </FormLabel>
-                                <Input {...register("password", {required: true})} name={'password'} placeholder={'Password'} type={'password'}/>
-                            </FormControl>
-                            <Button type={"submit"}>
-                                Submit
-                            </Button>
-                        </form>
+    <PasswordContext.Consumer>
+        {({updatePassword}) => (
+        <Wrapper>
+            <Flex width="100%" justifyContent="center">
+                <Box p={2} width={"30%"}>
+                    <Box textAlign="center">
+                        <Heading as={'h3'} size={'lg'}>Login</Heading>
+                    </Box>
+                    <Box p={8} width={"100%"} borderWidth={1} borderRadius={8} boxShadow={"lg"}>
+                        <Box>
+                            <form onSubmit={handleSubmit((data) => {updatePassword(data.password); onSubmit(data);})}>
+                                <FormControl p={2} isRequired>
+                                    <FormLabel display={'flex'} as={'legend'} alignItems={'center'}>
+                                        Username
+                                    </FormLabel>
+                                    <Input {...register("username", {required: true})} name={'username'} placeholder={'Username'}/>
+                                </FormControl>
+                                <FormControl p={2} isRequired>
+                                    <FormLabel display={'flex'} as={'legend'} alignItems={'center'}>
+                                        Password
+                                    </FormLabel>
+                                    <Input {...register("password", {required: true})} name={'password'} placeholder={'Password'} type={'password'}/>
+                                </FormControl>
+                                <Button type={"submit"}>
+                                    Submit
+                                </Button>
+                            </form>
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
-        </Flex>
-    </Wrapper>
+            </Flex>
+        </Wrapper>)}
+    </PasswordContext.Consumer>
     );
 }
 
