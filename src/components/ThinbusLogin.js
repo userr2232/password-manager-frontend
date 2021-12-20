@@ -78,9 +78,8 @@ const authenticate = async (data, setUser) => {
 }
 
 const ThinbusLogin = () => {
-    const { u } = useAuth()
     const navigate = useNavigate()
-    const [user, setUser] = u
+    const {user, setUser} = useAuth()
     const { control, register, handleSubmit, reset } = useForm({
         defaultValues: {username: '', password: ''},
         shouldUseNativeValidation: true
@@ -90,14 +89,14 @@ const ThinbusLogin = () => {
         control
       });
 
+    useEffect(() => {
+        if(user === true) {
+            navigate("/", {replace: true})
+        }
+    }, [user])
+
     const onSubmit = async data => {
-        authenticate(data, setUser).then( _ => {
-            console.log(user)
-            if (user) {
-                
-                navigate('/', { replace: true })
-            }
-        });
+        authenticate(data, setUser)
     }
 
     useEffect(() => {

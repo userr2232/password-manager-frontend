@@ -35,12 +35,12 @@ const Home = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [showAccountCreation, setShowAccountCreation] = useState(false);
   const [accounts, setAccounts] = useState([]);
+  const [secretKey, setSecretKey] = useState("")
 
-  const {context_password} = useContext(PasswordContext);
+  const context_password = useContext(PasswordContext);
 
-  let { u } = useAuth()
   const navigate = useNavigate()
-  const [_, setUser] = u
+  const {setUser} = useAuth()
   
   const handleClick = () => {
     localStorage.removeItem("jwt")
@@ -58,8 +58,9 @@ const Home = () => {
       console.log("encrypted_secret", encrypted_secret.data);
 
       console.log("context_password", context_password)
-      const secret_key = aes.decrypt(encrypted_secret.data.secretkey, context_password).toString();
+      const secret_key = aes.decrypt(encrypted_secret.data.secretkey, context_password.password).toString();
       console.log("secret_key", secret_key);
+      setSecretKey(secret_key)
 
       const response = await axios(apiUrl + '/passwords', {
         method: 'get',
@@ -69,6 +70,7 @@ const Home = () => {
       if (response.ok) {
           const data = await response.json()
           console.log(data)
+          
 
       } else {
           console.log("error")
@@ -89,8 +91,20 @@ const Home = () => {
     }
 
     const addToListAndCreate = (account) => {
-      setAccounts(accounts.concat({...account}))
-
+      const new_accounts = accounts.concat({...account})
+      setAccounts(new_accounts);
+      const new_accounts_str = JSON.stringify(new_accounts);
+      const encrypted_accounts = aes.encrypt(new_accounts_str, secretKey).toString();
+      const jwt = localStorage.getItem('jwt');
+      axios(apiUrl + '/passwords', {
+        method: 'post',
+        data: encrypted_accounts,
+        headers: {
+          Authorization: 'Bearer ' + jwt,
+          crossOrigin: true,
+          'Content-Type': 'application/json'
+        }
+      });
     }
 
     return (

@@ -8,9 +8,8 @@ import Home from './Home';
 import { PasswordContext } from '../contexts/password';
 
 const AuthenticatedRoute = ({ children }) => {
-  let { u } = useAuth()
   let location = useLocation()
-  const [user, _] = u
+  const {user} = useAuth()
   if(!user) {
     return <Navigate to="/login" state={{ from: location }} />
   }

@@ -1,7 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiUrl } from "../config";
 
-let AuthContext = createContext();
+let AuthContext = createContext({
+    user: false,
+    loading: false,
+    setUser: () => {}
+});
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
@@ -31,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ u: [user, setUser]}} >
+        <AuthContext.Provider value={{user, setUser}} >
             {!loadingInitial && children}
         </AuthContext.Provider>
     )
