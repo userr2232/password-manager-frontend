@@ -11,6 +11,8 @@ import { Button } from '@chakra-ui/button';
 import { Flex, Heading } from '@chakra-ui/layout';
 import { useAuth } from '../auth/UseAuth';
 import { useNavigate } from 'react-router';
+import { emptyObject } from '../utils';
+import CryptoJS from 'crypto-js';
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,7 +37,6 @@ const Home = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [showAccountCreation, setShowAccountCreation] = useState(false);
   const [accounts, setAccounts] = useState([]);
-  const [secretKey, setSecretKey] = useState("")
 
   const context_password = useContext(PasswordContext);
 
@@ -50,28 +51,24 @@ const Home = () => {
 
   useEffect(() => {
     async function init() {
+      //const pass = alert("DAME TU PASSWORD")
       const jwt = localStorage.getItem('jwt')
-      const encrypted_secret = await axios(apiUrl + '/login/secret', {
-          method: 'get',
-          headers: { Authorization: 'Bearer ' + jwt }
-      })
-      console.log("encrypted_secret", encrypted_secret.data);
+      
+      const secretKey = localStorage.getItem('sk')
 
-      console.log("context_password", context_password)
-      const secret_key = aes.decrypt(encrypted_secret.data.secretkey, context_password.password).toString();
-      console.log("secret_key", secret_key);
-      setSecretKey(secret_key)
-
+      if(!jwt || !secretKey) {
+        localStorage.clear()
+        navigate('/login', { replace: true})
+        return
+      }
       const response = await axios(apiUrl + '/passwords', {
         method: 'get',
         headers: { Authorization: 'Bearer ' + jwt }
       });
-      
-      if (response.ok) {
-          const data = await response.json()
-          console.log(data)
-          
-
+      if (response.status === 200 && !emptyObject(response.data)) {
+          let decrypted_accounts = aes.decrypt(response.data.data, secretKey)
+          decrypted_accounts = decrypted_accounts.toString(CryptoJS.enc.Utf8)
+          setAccounts(JSON.parse(decrypted_accounts))
       } else {
           console.log("error")
       }
@@ -94,11 +91,18 @@ const Home = () => {
       const new_accounts = accounts.concat({...account})
       setAccounts(new_accounts);
       const new_accounts_str = JSON.stringify(new_accounts);
+      const secretKey = localStorage.getItem('sk')
       const encrypted_accounts = aes.encrypt(new_accounts_str, secretKey).toString();
       const jwt = localStorage.getItem('jwt');
-      axios(apiUrl + '/passwords', {
+      let path = "create"
+      if(new_accounts.length > 1) {
+        path = "update"
+      }
+      axios(apiUrl + '/passwords/'+path, {
         method: 'post',
-        data: encrypted_accounts,
+        data: {
+          'data': encrypted_accounts
+        },
         headers: {
           Authorization: 'Bearer ' + jwt,
           crossOrigin: true,

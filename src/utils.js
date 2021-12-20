@@ -7,3 +7,6 @@ export const random_str = length => {
     }
     return result;
 }
+
+export const len = (obj) => Object.keys(obj).length;
+export const emptyObject = (obj) => obj == undefined || len(obj) == 0;

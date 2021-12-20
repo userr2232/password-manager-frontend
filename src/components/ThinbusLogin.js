@@ -10,6 +10,8 @@ import { apiUrl } from '../config';
 import { PasswordContext } from '../contexts/password';
 import { useAuth } from '../auth/UseAuth';
 import { useNavigate } from 'react-router';
+import CryptoJS from 'crypto-js';
+import aes from 'crypto-js/aes';
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,7 +28,7 @@ const rfc5054 = {
     k_base16: "5b9e8ef059c6b32ea59fc1d322d37f04aa30bae5aa9003b8321e21ddb04e300"
 };
 
-const authenticate = async (data, setUser) => {
+const authenticate = async (data, setUser, setSK) => {
     const { username, password } = data;
 
     const challengeRes = await axios({
@@ -70,6 +72,15 @@ const authenticate = async (data, setUser) => {
             const jwt = loginRes.data["access_token"]
             localStorage.setItem("jwt", jwt)
             setUser(true)
+            const encrypted_secret = await axios(apiUrl + '/login/secret', {
+                method: 'get',
+                headers: { Authorization: 'Bearer ' + jwt }
+            })
+            console.log("encrypted_secret", encrypted_secret.data);
+            const secret_key = aes.decrypt(encrypted_secret.data.secretkey, password).toString(CryptoJS.enc.Utf8);
+            setSK(secret_key)
+            console.log("secret_key", secret_key);
+            localStorage.setItem("sk", secret_key)
         }
     } catch (error) {
         console.log("error ", error)
@@ -80,6 +91,7 @@ const authenticate = async (data, setUser) => {
 const ThinbusLogin = () => {
     const navigate = useNavigate()
     const {user, setUser} = useAuth()
+    const [sk, setSK] = useState("")
     const { control, register, handleSubmit, reset } = useForm({
         defaultValues: {username: '', password: ''},
         shouldUseNativeValidation: true
@@ -90,13 +102,13 @@ const ThinbusLogin = () => {
       });
 
     useEffect(() => {
-        if(user === true) {
+        if(user && sk !== "" ) {
             navigate("/", {replace: true})
         }
-    }, [user])
+    }, [user, sk])
 
     const onSubmit = async data => {
-        authenticate(data, setUser)
+        authenticate(data, setUser, setSK)
     }
 
     useEffect(() => {

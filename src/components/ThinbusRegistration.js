@@ -9,6 +9,7 @@ import axios from 'axios';
 import { apiUrl } from '../config'
 import { random_str } from '../utils';
 import aes from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 
 const Wrapper = styled.div`
   display: flex;
@@ -44,6 +45,9 @@ const createVerifier = (data) => {
 
     const encrypted_secret = aes.encrypt(secret_key, password).toString();
     console.log("encrypted_secret", encrypted_secret)
+
+    const decrypted_secret = aes.decrypt(encrypted_secret, password).toString(CryptoJS.enc.Utf8)
+    console.log("decrypted secret", decrypted_secret)
 
     console.log("the encrypted secret was encrypted with the password", password)
 
